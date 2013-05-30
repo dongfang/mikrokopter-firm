@@ -1,0 +1,44 @@
+Dongfang FC Rewrite
+
+Goal: A neat, modular, analysable, reliable and easily extendable code base for Mikrokopter FC and later NC.
+Experience and good design ideas from the original code are reused.
+The project is personal. Only the parts that were of immediate use for myself were included.
+The feature set is smaller than that of the original code, but the addition of features is much easier. It is more of a developer's firmware than a consumer's.
+
+Features:
+- Will run as compiled with any AVR-GCC version.
+- Will run with any hardware version, and easily adapt to nonstandard hardware. Will run with or without ACC sensor, and with sensors in any orientation.
+- Will run without a bootloader.
+- Has a real Attitude Heading Reference System using DCM (Direction Cosine Matrix). Borrowed from Ardupilot.
+- The fc.c code monster has been killed and cut up. Global variables have been kept at a minimum. Abstractions are used where they should be.
+- Controls have been abstracted and separated. RC, navigation, serial control, failsafe flight etc. are all in separate modules.
+- NaviCtrl is not yet implemented (the strategy will probably be: First integrate to existing NaviCtrl code, then rewrite that as well). For simple requirements, navigation by directly connected GPS is possible.
+
+
+Configuration and diags tool
+
+Description of modules
+
+ControlMixer:
+The control mixer makes a composite control vector of four virtual RC sticks, based on the output of all features exercising control on the flight. The logic to mix the inputs is kept simple and free from side effects.
+The component inputs include: RC, serial control, navigation, height control, compass-fixed heading control and failsafe emergency flight.
+
+Commands:
+Commands by RC stick gestures (calibrate, select parameterset, start and stop motors) have been abstracted into this module. Ultimately, serial control should also have commands capabilities.
+
+Attitude:
+All code related to determining the flight attitude of the MK (as opposed to determining control input and output) has been placed here. This relies heavily on data from the analog module.
+Gyroscope calibration data is storen in EEPROM like accelerometer calibration data. There is thus no need to calibrate before each flight.
+
+Flight:
+This module calculates the motor output vector based on data from the attitude module, and composite stick input from the controlMixer module. This is the functionality fc.c minus all the things that were moved away.
+
+Output:
+The two LED outputs on the FC have a more advanced control and can be used as debugging signals etc.
+
+
+Parameterset changes:
+- The RC channel mapping is global and accessed through new serial commands.
+- Gyro and accelerometer sensor attitudes added. These will also be made global at a later time.
+- The parameter sets are incompatible with all MK-Tool versions and the dongfang tool must be used instead. The tool will currently only read and write to an XML paramerset format, but that is easy to overview, read, compare and write.
+

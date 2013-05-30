@@ -1,0 +1,21 @@
+This is a list of the ATMega pins that are used for various ad-hoc I/O on the FC.
+The A/D converter inputs, the ISP interface, I2C and the air pressure circuit and 
+red and green LED outputs are not included.
+
+ATMEGA pin	FC1.3 name    FC 2.0 name	Used for
+-------------------------------------------------------------------------------------------
+PC7    		SPEAKER	      SPEAKER		Beeper.
+PC6    		J6	      SERVO_R		FC1.3: J9. FC2.0: Reset on IC5/4017.
+PC5		PC5	      PC5		Expansion port pin 6. "SPI slave select" in spi.c.
+PC4		PC4	      PC4		Expansion port pin 5. PWM in from MK3Mag compass.
+PC3		PC3	      PC3		SV2 pin 1 via transistor. Also known as J17.
+PC2		PC2	      PC2		SV2 pin 5 via transistor. Also known as J16.
+
+PD7		SERVO	      SERVO_C		FC1.3: J7. FC2.0: Clock on IC5/4017.
+PD6		ICP(PPM)      ICP(PPM)		R/C PPM signal in.
+PD5		J3	      J3		R/C channel 5 forward (rc.c). Auto-zero feature on InvenSense gyros (InvenSense.c, dongfang only).
+PD4		J4	      J4		R/C channel 6 forward (rc.c). Execution time measurement of main loop (main.c).
+PD3		J5	      J5		TXD1 with ATMega644p. R/C channel 7 forward with ATMega644.
+PD2			      			RXD1 with ATMega644p
+
+TDX1 and RXD1 are the 2nd UART in ATMEGA644p. It can be used for direct connection of a UBlox GPS module (no Navi-Ctrl), or for connection of a Spectrum or DSL serial R/C satellite.
